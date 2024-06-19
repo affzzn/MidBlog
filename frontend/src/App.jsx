@@ -7,6 +7,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import PostDetails from "./pages/PostDetails";
 import CreatePost from "./pages/CreatePost";
+import EditPost from "./pages/EditPost";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route exact path="/register" element={<Register />} />
         <Route exact path="/posts/post/:pid" element={<PostDetails />} />
         <Route exact path="/write" element={<CreatePost />} />
+        <Route exact path="/edit/:pid" element={<EditPost />} />
+        <Route exact path="/profile/:prid" element={<Profile />} />
       </Routes>
     </div>
   );
