@@ -63,4 +63,20 @@ router.get("/logout", async (req, res) => {
   }
 });
 
+// REFETCH USER
+
+router.get("/refetch", async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
+      if (err) {
+        return res.status(401).json("Unauthorized");
+      }
+      res.status(200).json(data);
+    });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 module.exports = router;

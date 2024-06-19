@@ -4,6 +4,8 @@ import Footer from "../components/Footer";
 import { useState } from "react";
 import axios from "axios";
 import { URL } from "../url";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,12 +14,20 @@ function Login() {
 
   const navigate = useNavigate();
 
+  const { setUser } = useContext(UserContext);
+
   const handleLogin = async () => {
     try {
-      const response = await axios.post(URL + "/api/auth/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        URL + "/api/auth/login",
+        {
+          email,
+          password,
+        },
+        { withCredentials: true }
+      );
+
+      setUser(response.data);
 
       console.log("login successful", response.data);
       navigate("/");

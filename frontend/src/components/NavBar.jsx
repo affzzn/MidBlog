@@ -4,9 +4,12 @@ import { FaSearch } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 import Menu from "./Menu";
 import { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 function NavBar() {
-  const user = false;
+  const { user } = useContext(UserContext);
+  console.log(user);
 
   const [menu, setMenu] = useState(false);
   const showMenu = () => {
