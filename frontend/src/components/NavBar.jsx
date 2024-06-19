@@ -6,7 +6,7 @@ import Menu from "./Menu";
 import { useState } from "react";
 
 function NavBar() {
-  const user = true;
+  const user = false;
 
   const [menu, setMenu] = useState(false);
   const showMenu = () => {

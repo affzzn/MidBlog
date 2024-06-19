@@ -9,7 +9,7 @@ const commentRouter = require("./routes/comments");
 const dotenv = require("dotenv");
 
 const cookieParser = require("cookie-parser");
-
+const cors = require("cors");
 
 // databse
 
@@ -27,6 +27,7 @@ const connectDB = async () => {
 dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
