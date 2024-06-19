@@ -1,9 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
+import Menu from "./Menu";
+import { useState } from "react";
 
 function NavBar() {
-  const user = false;
+  const user = true;
+
+  const [menu, setMenu] = useState(false);
+  const showMenu = () => {
+    setMenu(!menu);
+  };
 
   return (
     <div className="flex items-center justify-between px-6 md:px-[200px] py-4">
@@ -18,7 +26,7 @@ function NavBar() {
         <input type="text" placeholder="Search" className="px-3 outline-none" />
       </div>
 
-      <div className="flex items-center justify-center space-x-2 md:space-x-4">
+      <div className="hidden md:flex items-center justify-center space-x-2 md:space-x-4">
         {user ? (
           <h3>
             <Link to="/write">Write</Link>
@@ -35,6 +43,13 @@ function NavBar() {
             <Link to="/register">Register</Link>
           </h3>
         )}
+      </div>
+
+      <div onClick={showMenu} className="md:hidden text-lg">
+        <p>
+          <FaBars />
+        </p>
+        {menu && <Menu />}
       </div>
     </div>
   );

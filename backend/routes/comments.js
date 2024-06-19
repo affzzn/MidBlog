@@ -3,7 +3,7 @@ const router = express.Router();
 
 const Comment = require("../models/Comment");
 
-const verifyToken = require("./verifyToken");
+const verifyToken = require("../verifyToken");
 
 //CREATE
 router.post("/create", verifyToken, async (req, res) => {
