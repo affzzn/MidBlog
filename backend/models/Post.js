@@ -20,7 +20,7 @@ const PostSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    userIdL: {
+    userId: {
       type: String,
       required: true,
     },
