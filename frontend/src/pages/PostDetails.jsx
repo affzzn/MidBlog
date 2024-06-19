@@ -1,16 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { URL } from "../url";
 
 function PostDetails() {
+  const postId = useParams().id;
+  const [post, setPost] = useState({});
+
+  const fetchPost = async () => {
+    try {
+      const response = await axios.get(URL + `/api/posts/${postId}`);
+      console.log(response.data);
+      setPost(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, [postId]);
+
+  // if (!post) {
+  //   return (
+  //     <>
+  //       <NavBar />
+  //       <div className="px-8 md:px-[200px] mt-8">Loading...</div>
+  //       <Footer />
+  //     </>
+  //   );
+  // }
+
   return (
     <>
       <NavBar />
       <div className="px-8 md:px-[200px] mt-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-black">ADHD & AI</h1>
+          <h1 className="text-2xl font-bold text-black">{post.title}</h1>
           <div className="flex items-center justify-center space-x-2">
             <p>
               <BiEdit />
@@ -21,30 +51,25 @@ function PostDetails() {
           </div>
         </div>
         <div className="flex items-center justify-between mt-2 md:mt-4">
-          <p>@affzzn</p>
+          <p>@{post.username}</p>
           <div className="flex space-x-2 text-sm">
-            {/* <p>{new Date(post.updatedAt).toString().slice(0, 15)}</p>
-            <p>{new Date(post.updatedAt).toString().slice(16, 24)}</p> */}
+            <p>{new Date(post.updatedAt).toString().slice(0, 15)}</p>
+            <p>{new Date(post.updatedAt).toString().slice(16, 24)}</p>
           </div>
         </div>
 
-        <img
-          src="https://ioflood.com/blog/wp-content/uploads/2023/10/java_logo_dice_random-300x300.jpg.webp"
-          alt=""
-          className="w-full mx-auto mt-8 "
-        />
-        <p className="mx-auto mt-8">
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nesciunt,
-          libero. Vero quibusdam et ipsum nostrum, corrupti omnis, porro dolor
-          tempora nisi vel sequi architecto cupiditate odio sit ad repudiandae!
-          Ipsum molestias ea exercitationem, pariatur est quis? Maiores, quia
-          dicta! Rerum fugit voluptate consequatur quos iure!
-        </p>
+        <img src={post.photo} alt="" className="w-full mx-auto mt-8 " />
+        <p className="mx-auto mt-8">{post.desc}</p>
         <div className="flex items-center mt-8 space-x-4 font-semibold">
           <p>Categories:</p>
           <div className="flex justify-center items-center space-x-2">
-            <div className="bg-gray-300 rounded-lg px-3 py-1">Tech</div>
-            <div className="bg-gray-300 rounded-lg px-3 py-1">AI</div>
+            {post.categories?.map((c, i) => {
+              return (
+                <div key={i} className="bg-gray-300 rounded-lg px-3 py-1">
+                  {c}
+                </div>
+              );
+            })}
           </div>
         </div>
 
