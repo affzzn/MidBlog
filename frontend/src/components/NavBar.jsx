@@ -6,6 +6,8 @@ import Menu from "./Menu";
 import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import axios from "axios";
+import { URL } from "../url";
 
 function NavBar() {
   const { user } = useContext(UserContext);
@@ -14,6 +16,20 @@ function NavBar() {
   const [menu, setMenu] = useState(false);
   const showMenu = () => {
     setMenu(!menu);
+  };
+
+  const { setUser } = useContext(UserContext);
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(URL + "/api/auth/logout", {
+        withCredentials: true,
+      });
+      setUser(null);
+      console.log("logged out");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -45,6 +61,12 @@ function NavBar() {
           <h3>
             <Link to="/register">Register</Link>
           </h3>
+        )}
+        {user && (
+          <div onClick={handleLogout}>
+            {" "}
+            <h3>Logout</h3>
+          </div>
         )}
       </div>
 

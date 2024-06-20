@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { MdDelete } from "react-icons/md";
 import { ImCross } from "react-icons/im";
+import { UserContext } from "../context/UserContext";
+import axios from "axios";
+import { URL } from "../url";
+import { useNavigate } from "react-router-dom";
 
 function CreatePost() {
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [file, setFile] = useState(null);
+
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
   const [cat, setCat] = useState("");
   const [catArr, setCatArr] = useState(["Tech", "AI", "ML", "DL", "Web Dev"]);
 
@@ -17,7 +28,44 @@ function CreatePost() {
     setCatArr(updatedCats);
   };
 
-  const handleCreate = () => {};
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    const post = {
+      title,
+      desc,
+      username: user.username,
+      userId: user._id,
+      categories: catArr,
+    };
+
+    //image upload
+
+    if (file) {
+      const data = new FormData();
+      const filename = Date.now() + file.name;
+      data.append("img", filename);
+      data.append("file", file);
+      post.photo = filename;
+      try {
+        const imgUpload = await axios.post(`${URL}/api/upload`, data);
+        console.log(imgUpload.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    // post create
+
+    try {
+      const response = await axios.post(`${URL}/api/posts/write`, post, {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      navigate(`/posts/post/${response.data._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>

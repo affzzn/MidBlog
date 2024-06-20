@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { URL } from "../url";
 import { UserContext } from "../context/UserContext";
+import { IF } from "../url";
 
 function PostDetails() {
   const { id } = useParams();
@@ -57,7 +58,7 @@ function PostDetails() {
           </div>
         </div>
 
-        <img src={post.photo} alt="" className="w-full mx-auto mt-8 " />
+        <img src={IF + post.photo} alt="" className="w-full mx-auto mt-8 " />
         <p className="mx-auto mt-8">{post.desc}</p>
         <div className="flex items-center mt-8 space-x-4 font-semibold">
           <p>Categories:</p>
