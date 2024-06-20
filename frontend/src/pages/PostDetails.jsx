@@ -8,6 +8,7 @@ import axios from "axios";
 import { URL } from "../url";
 import { UserContext } from "../context/UserContext";
 import { IF } from "../url";
+import Comment from "../components/Comment";
 
 function PostDetails() {
   const { id } = useParams();
@@ -15,6 +16,10 @@ function PostDetails() {
   const [post, setPost] = useState({});
 
   const { user } = useContext(UserContext);
+
+  const [commentArr, setCommentArr] = useState([]);
+
+  const [comment, setComment] = useState("");
 
   const fetchPost = async () => {
     try {
@@ -42,6 +47,41 @@ function PostDetails() {
       navigate("http://localhost:5173/");
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const fetchPostComments = async () => {
+    try {
+      const response = await axios.get(`${URL}/api/comments/post/${id}`);
+      console.log(response.data);
+      setCommentArr(response.data);
+    } catch (error) {
+      console.log("error is: " + error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPostComments();
+  }, []);
+
+  const postComment = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        `${URL}/api/comments/create`,
+        {
+          comment: comment,
+          author: user.username,
+          postId: id,
+          userId: user._id,
+        },
+        { withCredentials: true }
+      );
+      console.log(response.data);
+      fetchPostComments();
+      setComment("");
+    } catch (error) {
+      console.log("error is: " + error);
     }
   };
 
@@ -94,61 +134,25 @@ function PostDetails() {
           <h3 className="mt-6 mb-4 font-semibold">Comments:</h3>
 
           {/* each comment */}
-          <div className="px-2 py-2 bg-gray-200 rounded-lg mt-2 my-2">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-gray-600">@affzzn</h3>
-              <div className="flex justify-center items-center space-x-4">
-                <p className="text-gray-500 text-sm">10/05/2024</p>
-                <p className="text-gray-500 text-sm">15:44</p>
-                <div className="flex items-center justify-center space-x-2">
-                  <p>
-                    <BiEdit />
-                  </p>
-                  <p>
-                    <MdDelete />
-                  </p>
-                </div>
-              </div>
-            </div>
-            <p className="mt-2 px-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptates, quod, quae voluptate, quos quas dolores tempora
-              voluptatum quia distinctio doloribus.
-            </p>
-          </div>
-          <div className="px-2 py-2 bg-gray-200 rounded-lg mt-2 my-2">
-            <div className="flex items-center justify-between">
-              <h3 className="font-bold text-gray-600">@affzzn</h3>
-              <div className="flex justify-center items-center space-x-4">
-                <p className="text-gray-500 text-sm">10/05/2024</p>
-                <p className="text-gray-500 text-sm">15:44</p>
-                <div className="flex items-center justify-center space-x-2">
-                  <p>
-                    <BiEdit />
-                  </p>
-                  <p>
-                    <MdDelete />
-                  </p>
-                </div>
-              </div>
-            </div>
-            <p className="mt-2 px-4">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam
-              voluptates, quod, quae voluptate, quos quas dolores tempora
-              voluptatum quia distinctio doloribus.
-            </p>
-          </div>
+
+          {commentArr?.map((c, i) => (
+            <Comment key={i} c={c} post={post} />
+          ))}
         </div>
 
         {/* write a comment */}
         <div className="w-full flex flex-col mt-4 md:flex-row">
           <input
+            onChange={(e) => setComment(e.target.value)}
             type="text"
             placeholder="Write a comment"
             className="md:w-[80%] outline-none py-2 px-4 mt-4 md:mt-0"
           />
-          <button className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0">
-            Add Comment
+          <button
+            onClick={postComment}
+            className="bg-black text-sm text-white px-2 py-2 md:w-[20%] mt-4 md:mt-0"
+          >
+            Post Comment
           </button>
         </div>
       </div>
