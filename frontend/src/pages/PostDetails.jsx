@@ -3,7 +3,7 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { BiEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { URL } from "../url";
 import { UserContext } from "../context/UserContext";
@@ -33,37 +33,52 @@ function PostDetails() {
     }
   }, [id]);
 
+  const navigate = useNavigate();
+
+  const handleDeletePost = async () => {
+    try {
+      await axios.delete(`${URL}/api/posts/${id}`, { withCredentials: true });
+      console.log("Post has been deleted");
+      navigate("http://localhost:5173/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <NavBar />
       <div className="px-8 md:px-[200px] mt-8">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-black">{post.title}</h1>
-          {user?._id == post?.userId && (
+          <h1 className="text-2xl font-bold text-black">{post?.title}</h1>
+          {user?._id === post?.userId && (
             <div className="flex items-center justify-center space-x-2">
-              <p>
+              <p
+                className="cursor-pointer"
+                onClick={() => navigate(`/edit/${id}`)}
+              >
                 <BiEdit />
               </p>
-              <p>
+              <p className="cursor-pointer" onClick={handleDeletePost}>
                 <MdDelete />
               </p>
             </div>
           )}
         </div>
         <div className="flex items-center justify-between mt-2 md:mt-4">
-          <p>@{post.username}</p>
+          <p>@{post?.username}</p>
           <div className="flex space-x-2 text-sm">
-            <p>{new Date(post.updatedAt).toString().slice(0, 15)}</p>
-            <p>{new Date(post.updatedAt).toString().slice(16, 24)}</p>
+            <p>{new Date(post?.updatedAt).toString().slice(0, 15)}</p>
+            <p>{new Date(post?.updatedAt).toString().slice(16, 24)}</p>
           </div>
         </div>
 
-        <img src={IF + post.photo} alt="" className="w-full mx-auto mt-8 " />
-        <p className="mx-auto mt-8">{post.desc}</p>
+        <img src={IF + post?.photo} alt="" className="w-full mx-auto mt-8 " />
+        <p className="mx-auto mt-8">{post?.desc}</p>
         <div className="flex items-center mt-8 space-x-4 font-semibold">
           <p>Categories:</p>
           <div className="flex justify-center items-center space-x-2">
-            {post.categories?.map((c, i) => {
+            {post?.categories?.map((c, i) => {
               return (
                 <div key={i} className="bg-gray-300 rounded-lg px-3 py-1">
                   {c}

@@ -1,10 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { MdDelete } from "react-icons/md";
 import { ImCross } from "react-icons/im";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { URL } from "../url";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
 function EditPost() {
+  const { id } = useParams();
+
+  const [title, setTitle] = useState("");
+  const [desc, setDesc] = useState("");
+  const [file, setFile] = useState(null);
+
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  const fetchPost = async () => {
+    try {
+      const response = await axios.get(`${URL}/api/posts/${id}`);
+      console.log(response.data);
+      setTitle(response.data.title);
+      setDesc(response.data.desc);
+      setFile(response.data.photo);
+      setCatArr(response.data.categories);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPost();
+  }, [id]);
+
   const [cat, setCat] = useState("");
   const [catArr, setCatArr] = useState(["Tech", "AI", "ML", "DL", "Web Dev"]);
 
@@ -17,7 +48,44 @@ function EditPost() {
     setCatArr(updatedCats);
   };
 
-  const handleCreate = () => {};
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const post = {
+      title,
+      desc,
+      username: user.username,
+      userId: user._id,
+      categories: catArr,
+    };
+
+    //image upload
+
+    if (file) {
+      const data = new FormData();
+      const filename = Date.now() + file.name;
+      data.append("img", filename);
+      data.append("file", file);
+      post.photo = filename;
+      try {
+        const imgUpload = await axios.post(`${URL}/api/upload`, data);
+        console.log(imgUpload.data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    // post create
+
+    try {
+      const response = await axios.put(`${URL}/api/posts/${id}`, post, {
+        withCredentials: true,
+      });
+      console.log(response.data);
+      navigate(`/posts/post/${response.data._id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div>
@@ -27,6 +95,7 @@ function EditPost() {
         <form className="w-full flex flex-col space-y-4 md:space-y-8 mt-4">
           <input
             onChange={(e) => setTitle(e.target.value)}
+            value={title}
             type="text"
             placeholder="Enter post title"
             className="px-4 py-2 outline-none"
@@ -73,13 +142,14 @@ function EditPost() {
           </div>
           <textarea
             onChange={(e) => setDesc(e.target.value)}
+            value={desc}
             rows={15}
             cols={30}
             className="px-4 py-2 outline-none"
             placeholder="Enter post description"
           />
           <button
-            onClick={handleCreate}
+            onClick={handleUpdate}
             className="bg-black w-full md:w-[20%] mx-auto text-white font-semibold px-4 py-2 md:text-xl text-lg"
           >
             Update
