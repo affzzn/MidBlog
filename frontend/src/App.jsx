@@ -17,10 +17,10 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/login" element={<Login />} />
         <Route exact path="/register" element={<Register />} />
-        <Route exact path="/posts/post/:pid" element={<PostDetails />} />
+        <Route exact path="/posts/post/:id" element={<PostDetails />} />
         <Route exact path="/write" element={<CreatePost />} />
-        <Route exact path="/edit/:pid" element={<EditPost />} />
-        <Route exact path="/profile/:prid" element={<Profile />} />
+        <Route exact path="/edit/:id" element={<EditPost />} />
+        <Route exact path="/profile/:id" element={<Profile />} />
       </Routes>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { BiEdit } from "react-icons/bi";
@@ -6,34 +6,31 @@ import { MdDelete } from "react-icons/md";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { URL } from "../url";
+import { UserContext } from "../context/UserContext";
 
 function PostDetails() {
-  const postId = useParams().id;
+  const { id } = useParams();
+  // console.log("id is: " + postId);
   const [post, setPost] = useState({});
+
+  const { user } = useContext(UserContext);
 
   const fetchPost = async () => {
     try {
-      const response = await axios.get(URL + `/api/posts/${postId}`);
+      const response = await axios.get(`${URL}/api/posts/${id}`);
       console.log(response.data);
       setPost(response.data);
     } catch (error) {
-      console.log(error);
+      console.log("error is: " + error);
     }
   };
-
   useEffect(() => {
-    fetchPost();
-  }, [postId]);
-
-  // if (!post) {
-  //   return (
-  //     <>
-  //       <NavBar />
-  //       <div className="px-8 md:px-[200px] mt-8">Loading...</div>
-  //       <Footer />
-  //     </>
-  //   );
-  // }
+    if (id) {
+      fetchPost();
+    } else {
+      console.error("Post ID is undefined");
+    }
+  }, [id]);
 
   return (
     <>
@@ -41,14 +38,16 @@ function PostDetails() {
       <div className="px-8 md:px-[200px] mt-8">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-black">{post.title}</h1>
-          <div className="flex items-center justify-center space-x-2">
-            <p>
-              <BiEdit />
-            </p>
-            <p>
-              <MdDelete />
-            </p>
-          </div>
+          {user?._id == post?.userId && (
+            <div className="flex items-center justify-center space-x-2">
+              <p>
+                <BiEdit />
+              </p>
+              <p>
+                <MdDelete />
+              </p>
+            </div>
+          )}
         </div>
         <div className="flex items-center justify-between mt-2 md:mt-4">
           <p>@{post.username}</p>
