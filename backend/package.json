@@ -4,8 +4,9 @@
   "description": "backend for mern blog",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ./src/index.ts",
-    "start": "node ./build/index.js",
+    "start": "node index.js",
+    "start-dev": "nodemon index.js",
+    "build":"npm i",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Affan Imran",
