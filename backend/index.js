@@ -76,7 +76,9 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
   }
 });
 
-app.listen(5001, () => {
+const PORT = process.env.PORT || 5001;
+
+app.listen(PORT, () => {
   connectDB();
   console.log("Server is running on port 5001");
 });
