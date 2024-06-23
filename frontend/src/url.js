@@ -1,2 +1,2 @@
-export const URL = "https://midblog-backend.onrender.com";
-export const IF = "https://midblog-backend.onrender.com/images/";
+export const URL = "http://localhost:5001";
+export const IF = "http://localhost:5001/images/";
