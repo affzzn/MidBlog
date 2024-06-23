@@ -44,8 +44,8 @@ function PostDetails() {
     try {
       await axios.delete(`${URL}/api/posts/${id}`, { withCredentials: true });
       console.log("Post has been deleted");
-      // navigate("http://localhost:5173/");
-      navigate("/");
+      navigate("midblog.netlify.app/");
+      // navigate("/");
     } catch (error) {
       console.log(error);
     }
