@@ -32,7 +32,7 @@ const connectDB = async () => {
 app.use(express.json());
 app.use(cookieParser());
 
-const allowedOrigins = ["http://midblog.netlify.app"];
+const allowedOrigins = ["https://midblog.netlify.app"];
 const corsOptions = {
   origin: function (origin, callback) {
     if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
@@ -83,6 +83,7 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
+//
 //
 
 // const express = require("express");
